@@ -7,6 +7,7 @@ import org.springframework.data.annotation.CreatedDate;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @NamedEntityGraph(
         name = "grafoInteresaUsuario",
@@ -33,7 +34,7 @@ public class Interesa implements Serializable {
     private Usuario usuario;
 
     @CreatedDate
-    private LocalDate createdDate;
+    private LocalDateTime createdDate;
 
     @Lob
     private String mensaje;
