@@ -1,6 +1,6 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.security.jwt;
 
-import com.salesianostriana.dam.ProyectoRecuperacion.services.UsuarioService;
+import com.salesianostriana.dam.ProyectoRecuperacion.users.services.UsuarioService;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
@@ -16,7 +16,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.IllegalFormatCodePointException;
 import java.util.Optional;
 import java.util.UUID;
 

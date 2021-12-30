@@ -2,10 +2,11 @@ package com.salesianostriana.dam.ProyectoRecuperacion.dto.interesa;
 
 import com.salesianostriana.dam.ProyectoRecuperacion.models.InteresaPK;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 
-@Builder
+@SuperBuilder
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
 public class GetInteresaDto {
