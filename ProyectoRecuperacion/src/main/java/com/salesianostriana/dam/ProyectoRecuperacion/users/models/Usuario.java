@@ -58,7 +58,8 @@ public class Usuario implements UserDetails, Serializable {
 
     private String password;
 
-    private UserRole rol;
+    @Enumerated(EnumType.STRING)
+    private UserRole role;
 
     @Builder.Default
     @OneToMany(mappedBy = "usuario")
@@ -91,7 +92,7 @@ public class Usuario implements UserDetails, Serializable {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority("ROLE_" +rol.name()));
+        return List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override

@@ -13,7 +13,7 @@ public class UsuarioDtoConverter {
                 .avatar(usuario.getAvatar())
                 .email(usuario.getEmail())
                 .direccion(usuario.getDireccion())
-                .rol(usuario.getRol().name())
+                .rol(usuario.getRole().name())
                 .telefono(usuario.getTelefono())
                 .build();
     }

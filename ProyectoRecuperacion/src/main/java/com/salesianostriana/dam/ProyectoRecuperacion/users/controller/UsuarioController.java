@@ -25,8 +25,8 @@ public class UsuarioController {
 
 
     @GetMapping("/")
-    public ResponseEntity<List<GetUsuarioDto>> findAllPropietarios(Pageable pageable) {
-        List<Usuario> usuarios = usuarioService.findAllPropietarios(pageable);
+    public ResponseEntity<List<GetUsuarioDto>> findAllPropietarios() {
+        List<Usuario> usuarios = usuarioService.findAllPropietarios();
 
         if (usuarios == null) {
             return ResponseEntity.noContent().build();
@@ -34,7 +34,7 @@ public class UsuarioController {
             return ResponseEntity.ok()
                     .body(usuarios.stream()
                             .map(usuarioDtoConverter::converterUsuarioToUsuarioDto)
-                            .collect(Collectors.toList()))
+                            .collect(Collectors.toList()));
         }
 
     }

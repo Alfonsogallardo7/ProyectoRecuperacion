@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 @Configuration
 @RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -34,12 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
     }
 
-    @Bean
-    @Override
-    public AuthenticationManager authenticationManagerBean() throws Exception {
-        return super.authenticationManagerBean();
-    }
-
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -52,11 +47,30 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/auth/login").anonymous()
+                .antMatchers(HttpMethod.POST, "/auth/login", "/auth/register/user").anonymous()
+                .antMatchers(HttpMethod.POST, "/auth/register/gestor", "/auth/register/admin", "/inmobiliaria/").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/propietario/", "/vivienda/", "/vivienda/{id}" ,"/inmobiliaria/", "/inmobiliaria/{id}", "/vivienda/top?n=10").authenticated()
+                .antMatchers(HttpMethod.GET, "/propietario/{id}", "/interesado/{id}").hasAnyRole("ADMIN", "PROPIETARIO")
+                .antMatchers(HttpMethod.DELETE, "/propietario/{id}", "/vivienda/{id}", "/vivienda/{id}/inmobiliaria", "/vivienda/{id}/meinteresa").hasAnyRole("ADMIN", "PROPIETARIO")
+                .antMatchers(HttpMethod.POST, "/vivienda/", "/vivienda/{id}/meinteresa").hasRole("PROPIETARIO")
+                .antMatchers(HttpMethod.PUT, "/vivienda/{id}").hasAnyRole("PROPIETARIO", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/vivienda/{id}/inmobiliaria/{id}").hasAnyRole("PROPIETARIO", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/inmobiliaria/{id}/gestor").hasAnyAuthority("ADMIN", "GESTOR")
+                .antMatchers(HttpMethod.DELETE, "/inmobiliaria/gestor/{id}").hasAnyRole("ADMIN", "GESTOR")
+                .antMatchers(HttpMethod.GET, "/inmobiliaria/gestor").hasAnyRole("ADMIN", "GESTOR")
+                .antMatchers(HttpMethod.DELETE, "/inmobiliaria/{id}").hasRole("ADMIN")
+                .antMatchers(HttpMethod.GET, "/interesado/").hasRole("ADMIN")
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated();
+
         http.addFilterBefore(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
 
         http.headers().frameOptions().disable();
+    }
+
+    @Bean
+    @Override
+    public AuthenticationManager authenticationManagerBean() throws Exception {
+        return super.authenticationManagerBean();
     }
 }
