@@ -1,5 +1,9 @@
 package com.salesianostriana.dam.ProyectoRecuperacion;
 
+import com.salesianostriana.dam.ProyectoRecuperacion.models.Inmobiliaria;
+import com.salesianostriana.dam.ProyectoRecuperacion.models.Vivienda;
+import com.salesianostriana.dam.ProyectoRecuperacion.services.InmobiliariaService;
+import com.salesianostriana.dam.ProyectoRecuperacion.services.ViviendaService;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.UserRole;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.services.UsuarioService;
@@ -14,6 +18,8 @@ import javax.annotation.PostConstruct;
 public class MainDePrueba {
 
     private final UsuarioService usuarioService;
+    private final ViviendaService viviendaService;
+    private final InmobiliariaService inmobiliariaService;
 
     @PostConstruct
     public void datosPrueba () {
@@ -37,7 +43,7 @@ public class MainDePrueba {
                 .email("pepe@gmail.com")
                 .password("Admin1")
                 .telefono("123456789")
-                .role(UserRole.GESTOR)
+                .role(UserRole.PROPIETARIO)
                 .build();
 
         Usuario usuario3 = Usuario.builder()
@@ -51,9 +57,60 @@ public class MainDePrueba {
                 .role(UserRole.PROPIETARIO)
                 .build();
 
+        Inmobiliaria inmobiliaria1 = Inmobiliaria.builder()
+                .nombre("Tecnocasa")
+                .email("tecnocasa@gmail.com")
+                .telefono("657345234")
+                .build();
+
+        inmobiliariaService.save(inmobiliaria1);
+
+
+        Vivienda vivienda1 = Vivienda.builder()
+                .titulo("Casa Adosada")
+                .descripcion("Casa adosada en la barriada San José Obrero, localizada en el municipio de San Juan de Aznalfarache, Sevilla")
+                .avatar("foto.png")
+                .lating("45.5346,-45.34654")
+                .direccion("Canarias 114")
+                .codigoPostal("41920")
+                .poblacion("San Juan de Aznalfarache")
+                .provincia("Sevilla")
+                .tipo("Casa")
+                .usuario(usuario3)
+                .inmobiliaria(inmobiliaria1)
+                .precio(143345.00)
+                .numHabitaciones(3)
+                .numBanios(2)
+                .piscina(false)
+                .ascensor(false)
+                .garaje(false)
+                .build();
+
+        Vivienda vivienda2 = Vivienda.builder()
+                .titulo("Pisito")
+                .descripcion("Casa adosada en la barriada San José Obrero, localizada en el municipio de San Juan de Aznalfarache, Sevilla")
+                .avatar("foto.png")
+                .lating("45.5346,-45.34654")
+                .direccion("Canarias 114")
+                .codigoPostal("41920")
+                .poblacion("San Juan de Aznalfarache")
+                .provincia("Sevilla")
+                .tipo("Casa")
+                .usuario(usuario3)
+                .inmobiliaria(inmobiliaria1)
+                .precio(143345.00)
+                .numHabitaciones(3)
+                .numBanios(2)
+                .piscina(false)
+                .ascensor(false)
+                .garaje(false)
+                .build();
+
         usuarioService.save(usuario1);
         usuarioService.save(usuario2);
         usuarioService.save(usuario3);
+        viviendaService.save(vivienda1);
+        viviendaService.save(vivienda2);
     }
 
 }

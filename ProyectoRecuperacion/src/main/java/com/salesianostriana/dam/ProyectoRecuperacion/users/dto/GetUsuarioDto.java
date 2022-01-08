@@ -10,6 +10,7 @@ import java.util.UUID;
 @Getter @Setter
 public class GetUsuarioDto {
 
+    private UUID id;
     private String nombre, apellidos, email, avatar, telefono, rol, direccion;
 
 }

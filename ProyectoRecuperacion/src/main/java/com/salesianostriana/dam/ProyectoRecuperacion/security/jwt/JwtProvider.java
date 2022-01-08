@@ -20,9 +20,68 @@ import java.util.UUID;
 public class JwtProvider {
 
     public static final String TOKEN_TYPE = "JWT";
-
     public static final String TOKEN_HEADER = "Authorization";
+    public static final String TOKEN_PREFIX = "Bearer ";
 
+    @Value("${jwt.secret:llevalatararaunvestidoblancollenodecascabeles}")
+    private String jwtSecret;
+
+    @Value("${jwt.duration:86400}") // 1 día
+    private int jwtLifeInSeconds;
+
+    private JwtParser parser;
+
+    @PostConstruct
+    public void init() {
+        parser = Jwts.parserBuilder()
+                .setSigningKey(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
+                .build();
+    }
+
+    public String generateToken(Authentication authentication) {
+
+        Usuario user = (Usuario) authentication.getPrincipal();
+
+        Date tokenExpirationDate = Date
+                .from(LocalDateTime
+                        .now()
+                        .plusSeconds(jwtLifeInSeconds)
+                        .atZone(ZoneId.systemDefault()).toInstant());
+
+
+        return Jwts.builder()
+                .setHeaderParam("typ", TOKEN_TYPE)
+                .setSubject(user.getId().toString())
+                .setIssuedAt(tokenExpirationDate)
+                .claim("nombre", user.getNombre())
+                .claim("apellidos", user.getApellidos())
+                .claim("role", user.getRole().name())
+                .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
+                .compact();
+
+
+    }
+
+    public UUID getUserIdFromJwt(String token) {
+        return UUID.fromString(parser.parseClaimsJws(token).getBody().getSubject());
+    }
+
+
+    public boolean validateToken(String token) {
+
+        try {
+            parser.parseClaimsJws(token);
+            return true;
+        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
+            log.info("Error con el token: " + ex.getMessage());
+        }
+        return false;
+
+    }
+
+/*
+    public static final String TOKEN_TYPE = "JWT";
+    public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKE_PREFIX = "Bearer ";
 
     @Value("${jwt.secret:llevalatararaunvestidoblancollenodecascabeles}")
@@ -54,6 +113,8 @@ public class JwtProvider {
                 .setSubject(usuario.getId().toString())
                 .setIssuedAt(tokenExpDate)
                 .claim("nombre",usuario.getRole().name())
+                .claim("apellidos", usuario.getApellidos())
+                .claim("role", usuario.getRole())
                 .signWith(Keys.hmacShaKeyFor(jwtSecret.getBytes()))
                 .compact();
     }
@@ -71,5 +132,5 @@ public class JwtProvider {
 
     public UUID getUserIdFromJwt(String token) {
         return UUID.fromString(jwtParser.parseClaimsJwt(token).getBody().getSubject());
-    }
+    }*/
 }

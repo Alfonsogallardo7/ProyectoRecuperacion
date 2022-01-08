@@ -27,7 +27,33 @@ public class ViviendaDtoConverter {
                 .nombrePropietario(vivienda.getUsuario().getNombre())
                 .emailPropietario(vivienda.getUsuario().getEmail())
                 .telefonoPropietario(vivienda.getUsuario().getTelefono())
-                .inmobiliaria(vivienda.getInmobiliaria().getNombre())
+                .inmobiliaria(vivienda.getInmobiliaria() == null ? "Sin inmobiliaria" : vivienda.getInmobiliaria().getNombre())
                 .build();
+    }
+
+    public Vivienda createViviendaDtoToVivienda (CreateViviendaDto createViviendaDto, Vivienda vivienda) {
+        return new Vivienda(
+                vivienda.getId(),
+                createViviendaDto.getTitulo(),
+                createViviendaDto.getAvatar(),
+                createViviendaDto.getDescripcion(),
+                createViviendaDto.getCodigoPostal(),
+                createViviendaDto.getLating(),
+                createViviendaDto.getDireccion(),
+                createViviendaDto.getPoblacion(),
+                createViviendaDto.getProvincia(),
+                createViviendaDto.getTipo(),
+                createViviendaDto.getPrecio(),
+                createViviendaDto.getNumHabitacion(),
+                createViviendaDto.getMetrosCuadrados(),
+                createViviendaDto.getNumBanios(),
+                createViviendaDto.isAscensor(),
+                createViviendaDto.isGaraje(),
+                createViviendaDto.isPiscina(),
+                vivienda.getInmobiliaria(),
+                vivienda.getUsuario(),
+                vivienda.getListaInteresa()
+
+        );
     }
 }

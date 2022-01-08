@@ -17,9 +17,7 @@ public class BaseService <T, ID, R extends JpaRepository<T,ID>> {
         return repositorio.findAll();
     }
 
-    public Page<T> findAll(Pageable pageable) {
-        return repositorio.findAll(pageable);
-    }
+    public Page<T> findAll(Pageable pageable){return repositorio.findAll(pageable);     }
 
     public Optional<T> findById(ID id) {
         return repositorio.findById(id);

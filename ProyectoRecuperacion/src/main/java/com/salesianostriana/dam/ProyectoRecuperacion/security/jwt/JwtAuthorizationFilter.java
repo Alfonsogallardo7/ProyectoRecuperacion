@@ -24,6 +24,55 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+
+    private final UsuarioService userService;
+    private final JwtProvider jwtProvider;
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        String token = getJwtFromRequest(request);
+
+        try {
+            if (StringUtils.hasText(token) && jwtProvider.validateToken(token)) {
+
+                UUID userId = jwtProvider.getUserIdFromJwt(token);
+
+                Optional<Usuario> userEntity = userService.findById(userId);
+
+                if (userEntity.isPresent()) {
+                    Usuario user = userEntity.get();
+                    UsernamePasswordAuthenticationToken authentication =
+                            new UsernamePasswordAuthenticationToken(
+                                    user,
+                                    user.getRole(),
+                                    user.getAuthorities()
+                            );
+                    authentication.setDetails(new WebAuthenticationDetails(request));
+
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+
+                }
+            }
+
+        } catch (Exception ex) {
+            log.info("No se ha podido establecer el contexto de seguridad (" + ex.getMessage() + ")");
+        }
+
+        filterChain.doFilter(request, response);
+
+    }
+
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String bearerToken = request.getHeader(JwtProvider.TOKEN_HEADER);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(JwtProvider.TOKEN_PREFIX)) {
+            return bearerToken.substring(JwtProvider.TOKEN_PREFIX.length());
+        }
+        return null;
+    }
+
+    /*
     private final UsuarioService service;
     private final JwtProvider provider;
 
@@ -65,5 +114,5 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             return bearerToken.substring(JwtProvider.TOKE_PREFIX.length());
         }
         return null;
-    }
+    }*/
 }

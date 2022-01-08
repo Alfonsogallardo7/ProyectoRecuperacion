@@ -19,6 +19,24 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     private final ObjectMapper mapper;
 
+
+    @Override
+    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
+
+        httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
+        httpServletResponse.setContentType("application/json");
+
+        Map<String, String> mensajes =
+                Map.of("mensaje", e.getMessage());
+
+        String strjson = mapper.writeValueAsString(mensajes);
+
+        httpServletResponse.getWriter().println(strjson);
+
+    }
+
+   /* private final ObjectMapper mapper;
+
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response,
                          AuthenticationException authException) throws IOException, ServletException {
@@ -32,5 +50,5 @@ public class JwtAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
         response.getWriter().println(stringJson);
 
-    }
+    }*/
 }

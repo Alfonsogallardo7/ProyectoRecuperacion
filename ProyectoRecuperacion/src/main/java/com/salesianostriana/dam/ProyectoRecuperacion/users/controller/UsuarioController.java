@@ -1,41 +1,34 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.users.controller;
 
+import com.salesianostriana.dam.ProyectoRecuperacion.users.dto.CreateUsuarioDto;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.dto.GetUsuarioDto;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.dto.UsuarioDtoConverter;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.services.UsuarioService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @RestController
-@RequestMapping("/propietario")
+@RequiredArgsConstructor
+@RequestMapping("/auth")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
     private final UsuarioDtoConverter usuarioDtoConverter;
 
+    @PostMapping("/register/user")
+    public ResponseEntity<GetUsuarioDto> addPropietario (@RequestBody CreateUsuarioDto nuevoUsuario) {
+        Usuario usuario = usuarioService.savePropietario(nuevoUsuario);
 
-    @GetMapping("/")
-    public ResponseEntity<List<GetUsuarioDto>> findAllPropietarios() {
-        List<Usuario> usuarios = usuarioService.findAllPropietarios();
-
-        if (usuarios == null) {
-            return ResponseEntity.noContent().build();
-        }else {
-            return ResponseEntity.ok()
-                    .body(usuarios.stream()
-                            .map(usuarioDtoConverter::converterUsuarioToUsuarioDto)
-                            .collect(Collectors.toList()));
-        }
-
+        if (usuario == null) {
+            return ResponseEntity.badRequest().build();
+        } else
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDtoConverter.converterUsuarioToUsuarioDto(usuario));
     }
 }
