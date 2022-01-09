@@ -68,4 +68,44 @@ public class UsuarioService extends BaseService<Usuario, UUID, UsuarioRepository
         return null;
     }
 
+    public Usuario saveGestor (CreateUsuarioDto nuevoUsuario) {
+        if (nuevoUsuario.getPassword().contentEquals(nuevoUsuario.getPassword2())){
+            Usuario usuario = Usuario.builder()
+                    .password(passwordEncoder.encode(nuevoUsuario.getPassword()))
+                    .nombre(nuevoUsuario.getNombre())
+                    .apellidos(nuevoUsuario.getApellidos())
+                    .avatar(nuevoUsuario.getAvatar())
+                    .email(nuevoUsuario.getEmail())
+                    .telefono(nuevoUsuario.getTelefono())
+                    .direccion(nuevoUsuario.getDireccion())
+                    .role(UserRole.GESTOR)
+                    .build();
+            return save(usuario);
+        }
+
+        return null;
+    }
+
+    public Usuario saveAdmin (CreateUsuarioDto nuevoUsuario) {
+        if (nuevoUsuario.getPassword().contentEquals(nuevoUsuario.getPassword2())){
+            Usuario usuario = Usuario.builder()
+                    .password(passwordEncoder.encode(nuevoUsuario.getPassword()))
+                    .nombre(nuevoUsuario.getNombre())
+                    .apellidos(nuevoUsuario.getApellidos())
+                    .avatar(nuevoUsuario.getAvatar())
+                    .email(nuevoUsuario.getEmail())
+                    .telefono(nuevoUsuario.getTelefono())
+                    .direccion(nuevoUsuario.getDireccion())
+                    .role(UserRole.ADMIN)
+                    .build();
+            return save(usuario);
+        }
+
+        return null;
+    }
+
+
+
+
+
 }

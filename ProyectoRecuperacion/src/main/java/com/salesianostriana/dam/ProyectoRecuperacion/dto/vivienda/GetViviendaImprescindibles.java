@@ -15,6 +15,6 @@ import java.util.UUID;
 public class GetViviendaImprescindibles {
 
     private UUID id;
-    private String titulo, avatar, direccion, tipo, nombrePropietario, avatarPropietario;
+    private String titulo, avatar, direccion, tipo, nombrePropietario, avatarPropietario, nombreInmobiliaria;
     private Double precio;
 }

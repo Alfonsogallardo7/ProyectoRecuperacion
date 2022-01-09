@@ -1,7 +1,9 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.controllers;
 
 import com.salesianostriana.dam.ProyectoRecuperacion.dto.vivienda.*;
+import com.salesianostriana.dam.ProyectoRecuperacion.models.Inmobiliaria;
 import com.salesianostriana.dam.ProyectoRecuperacion.models.Vivienda;
+import com.salesianostriana.dam.ProyectoRecuperacion.services.InmobiliariaService;
 import com.salesianostriana.dam.ProyectoRecuperacion.services.ViviendaService;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.UserRole;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
@@ -29,6 +31,7 @@ import java.util.UUID;
 public class ViviendaController {
 
     private final ViviendaService viviendaService;
+    private final InmobiliariaService inmobiliariaService;
     private final ViviendaDtoConverter viviendaDtoConverter;
     private final ViviendaImprescindibleDtoConverter viviendaImprescindibleDtoConverter;
     private final ViviendaConPropietarioDtoConverter viviendaConPropietarioDtoConverter;
@@ -120,6 +123,38 @@ public class ViviendaController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(viviendaDto);
             }
 
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        @PostMapping("/{id}/inmobiliaria/{id2}")
+        public ResponseEntity<GetViviendaDto> addGestionInmobiliaria(@PathVariable UUID id,
+                                                                     @PathVariable UUID id2, @AuthenticationPrincipal Usuario user) {
+            Optional <Vivienda> vivienda = viviendaService.findById(id);
+            Optional <Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id2);
+
+            if (vivienda.isEmpty() || inmobiliaria.isEmpty())
+                return ResponseEntity.notFound().build();
+            else if (user.getRole().equals(UserRole.ADMIN) || vivienda.get().getUsuario().getId().equals(user.getId())){
+                Vivienda vivienda1 = viviendaService.addInmobiliaria(vivienda.get(), inmobiliaria.get());
+                return ResponseEntity.status(HttpStatus.CREATED).body(viviendaDtoConverter.convertViviendaToViviendaDto(vivienda1));
+            }
+
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        @DeleteMapping("/{id}/inmobiliaria/{id2}")
+        public ResponseEntity<GetViviendaDto> deleteGestionInmobiliaria (@PathVariable UUID id, @PathVariable UUID id2,
+                                                                         @AuthenticationPrincipal Usuario user) {
+            Optional<Vivienda> vivienda = viviendaService.findById(id);
+            Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id2);
+
+            if ((vivienda.isEmpty()) || (inmobiliaria.isEmpty()))
+                return ResponseEntity.notFound().build();
+
+            if (user.getRole().equals(UserRole.ADMIN) || (vivienda.get().getUsuario().getId().equals(user.getId()))) {
+                Vivienda vivienda1 = viviendaService.deleteInmobiliaria(vivienda.get(), inmobiliaria.get());
+                return ResponseEntity.status(HttpStatus.CREATED).body(viviendaDtoConverter.convertViviendaToViviendaDto(vivienda1));
+            }
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 }

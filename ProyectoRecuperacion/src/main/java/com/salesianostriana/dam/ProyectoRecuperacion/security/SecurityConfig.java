@@ -120,7 +120,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.DELETE, "/propietario/{id}", "/vivienda/{id}", "/vivienda/{id}/inmobiliaria", "/vivienda/{id}/meinteresa").hasAnyRole("ADMIN", "PROPIETARIO")
                 .antMatchers(HttpMethod.POST, "/vivienda/", "/vivienda/{id}/meinteresa").hasRole("PROPIETARIO")
                 .antMatchers(HttpMethod.PUT, "/vivienda/{id}").hasAnyRole("PROPIETARIO", "ADMIN")
-                .antMatchers(HttpMethod.POST, "/vivienda/{id}/inmobiliaria/{id}").hasAnyRole("PROPIETARIO", "ADMIN")
+                .antMatchers(HttpMethod.POST, "/vivienda/{id}/inmobiliaria/{id2}").hasAnyRole("PROPIETARIO", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/inmobiliaria/{id}/gestor").hasAnyRole("ADMIN", "GESTOR")
                 .antMatchers(HttpMethod.DELETE, "/inmobiliaria/gestor/{id}").hasAnyRole("ADMIN", "GESTOR")
                 .antMatchers(HttpMethod.GET, "/inmobiliaria/gestor").hasAnyRole("ADMIN", "GESTOR")

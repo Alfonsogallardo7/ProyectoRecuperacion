@@ -24,17 +24,6 @@ public class MainDePrueba {
     @PostConstruct
     public void datosPrueba () {
 
-        Usuario usuario1 = Usuario.builder()
-                .nombre("Alfonso")
-                .apellidos("Gallardo Rodríguez")
-                .avatar("foto.png")
-                .direccion("Canarias 114")
-                .email("alfonso@gmail.com")
-                .password("Admin1")
-                .telefono("123456789")
-                .role(UserRole.ADMIN)
-                .build();
-
         Usuario usuario2 = Usuario.builder()
                 .nombre("Pepe")
                 .apellidos("Gallardo Rodríguez")
@@ -77,7 +66,6 @@ public class MainDePrueba {
                 .provincia("Sevilla")
                 .tipo("Casa")
                 .usuario(usuario3)
-                .inmobiliaria(inmobiliaria1)
                 .precio(143345.00)
                 .numHabitaciones(3)
                 .numBanios(2)
@@ -97,7 +85,6 @@ public class MainDePrueba {
                 .provincia("Sevilla")
                 .tipo("Casa")
                 .usuario(usuario3)
-                .inmobiliaria(inmobiliaria1)
                 .precio(143345.00)
                 .numHabitaciones(3)
                 .numBanios(2)
@@ -106,7 +93,7 @@ public class MainDePrueba {
                 .garaje(false)
                 .build();
 
-        usuarioService.save(usuario1);
+
         usuarioService.save(usuario2);
         usuarioService.save(usuario3);
         viviendaService.save(vivienda1);

@@ -74,4 +74,18 @@ public class InmobiliariaController {
         else
             return ResponseEntity.ok(inmobiliariaDtoConverter.convertInmobiliariaToGetInmobiliariaDto(inmobiliaria.get()));
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteInmobiliaria (@PathVariable UUID id) {
+        Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id);
+
+        if (inmobiliaria.isEmpty())
+            return ResponseEntity.notFound().build();
+        else {
+            inmobiliaria.get().getListaVivienda()
+                    .forEach(vivienda -> vivienda.removeToInmobiliaria(inmobiliaria.get()));
+            inmobiliariaService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+    }
 }

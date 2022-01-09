@@ -1,6 +1,7 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.services;
 
 import com.salesianostriana.dam.ProyectoRecuperacion.dto.vivienda.CreateViviendaDto;
+import com.salesianostriana.dam.ProyectoRecuperacion.models.Inmobiliaria;
 import com.salesianostriana.dam.ProyectoRecuperacion.models.Vivienda;
 import com.salesianostriana.dam.ProyectoRecuperacion.repositories.ViviendaRepository;
 import com.salesianostriana.dam.ProyectoRecuperacion.services.base.BaseService;
@@ -33,5 +34,15 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
                 .tipo(nuevaVivienda.getTipo())
                 .build();
         return save(vivienda);
+    }
+
+    public Vivienda addInmobiliaria (Vivienda vivienda, Inmobiliaria inmobiliaria) {
+        vivienda.addToInmobiliaria(inmobiliaria);
+        return edit(vivienda);
+    }
+
+    public Vivienda deleteInmobiliaria (Vivienda vivienda, Inmobiliaria inmobiliaria) {
+        vivienda.removeToInmobiliaria(inmobiliaria);
+        return edit(vivienda);
     }
 }

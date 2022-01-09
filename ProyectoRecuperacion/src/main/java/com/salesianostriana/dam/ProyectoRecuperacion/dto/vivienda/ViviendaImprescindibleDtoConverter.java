@@ -16,6 +16,7 @@ public class ViviendaImprescindibleDtoConverter {
                 .precio(vivienda.getPrecio())
                 .nombrePropietario(vivienda.getUsuario().getNombre())
                 .avatarPropietario(vivienda.getUsuario().getAvatar())
+                .nombreInmobiliaria(vivienda.getInmobiliaria() == null ? "Sin inmobiliaria" : vivienda.getInmobiliaria().getNombre())
                 .build();
     }
 }

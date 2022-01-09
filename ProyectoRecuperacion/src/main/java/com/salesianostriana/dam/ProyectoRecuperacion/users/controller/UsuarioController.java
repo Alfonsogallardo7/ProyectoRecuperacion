@@ -31,4 +31,25 @@ public class UsuarioController {
         } else
             return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDtoConverter.converterUsuarioToUsuarioDto(usuario));
     }
+
+    @PostMapping("/register/gestor")
+    public ResponseEntity<GetUsuarioDto> addGestor (@RequestBody CreateUsuarioDto nuevoUsuario) {
+        Usuario usuario = usuarioService.saveGestor(nuevoUsuario);
+
+        if (usuario == null)
+            return ResponseEntity.badRequest().build();
+        else
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDtoConverter.converterUsuarioToUsuarioDto(usuario));
+    }
+
+    @PostMapping("/register/admin")
+    public ResponseEntity<GetUsuarioDto> addAdmin (@RequestBody CreateUsuarioDto nuevoUsuario) {
+
+        Usuario usuario = usuarioService.saveAdmin(nuevoUsuario);
+
+        if(usuario == null)
+            return ResponseEntity.badRequest().build();
+        else
+            return ResponseEntity.status(HttpStatus.CREATED).body(usuarioDtoConverter.converterUsuarioToUsuarioDto(usuario));
+    }
 }

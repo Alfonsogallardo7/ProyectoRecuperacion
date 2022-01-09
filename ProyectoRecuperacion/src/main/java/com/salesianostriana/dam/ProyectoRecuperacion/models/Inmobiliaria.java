@@ -39,10 +39,10 @@ public class Inmobiliaria implements Serializable {
     private String telefono;
 
     @Builder.Default
-    @OneToMany
+    @OneToMany(mappedBy = "inmobiliaria")
     private List<Vivienda> listaVivienda = new ArrayList<>();
 
     @Builder.Default
-    @OneToMany
+    @OneToMany(mappedBy = "inmobiliaria")
     private List<Usuario> listaGestores = new ArrayList<>();
 }
