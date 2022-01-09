@@ -13,6 +13,11 @@ import com.salesianostriana.dam.ProyectoRecuperacion.users.models.UserRole;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.services.InteresadoService;
 import com.salesianostriana.dam.ProyectoRecuperacion.util.paginations.PaginationsLinksUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -38,7 +43,6 @@ public class ViviendaController {
     private final ViviendaDtoConverter viviendaDtoConverter;
     private final ViviendaImprescindibleDtoConverter viviendaImprescindibleDtoConverter;
     private final InteresadoService interesadoService;
-    private final ViviendaConPropietarioDtoConverter viviendaConPropietarioDtoConverter;
     private final InteresaDtoConverter interesaDtoConverter;
     private final PaginationsLinksUtils paginationsLinksUtils;
 
@@ -84,6 +88,7 @@ public class ViviendaController {
             }
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
+
 
         @PostMapping("/")
         public ResponseEntity<GetViviendaDto> add (@RequestBody CreateViviendaDto viviendaNueva, @AuthenticationPrincipal Usuario usuario) {
@@ -163,6 +168,7 @@ public class ViviendaController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
+
         @PostMapping("/{id}/meinteresa")
         public ResponseEntity<GetInteresadoDto> addInteresado (@PathVariable UUID id, @RequestBody CreateInteresaInmprescindibleDto mensaje, @AuthenticationPrincipal Usuario user
                                                                     , CreateInteresDto createInteresDto) {
@@ -175,5 +181,18 @@ public class ViviendaController {
                        interesaDtoConverter.convertInteresaToInteresaDto(interesadoService.saveInteresado(createInteresDto,mensaje,user,vivienda.get()))
                );
 
+        }
+
+        @DeleteMapping("/{id}/meinteresa")
+        public ResponseEntity<?> deleteInteresado (@PathVariable UUID id, @AuthenticationPrincipal Usuario user) {
+            Optional<Vivienda> vivienda = viviendaService.findById(id);
+
+            if (vivienda.isEmpty())
+                return ResponseEntity.notFound().build();
+            else if (user.getRole().equals(UserRole.ADMIN)) {
+                vivienda.get().getListaInteresa().clear();
+                return ResponseEntity.noContent().build();
+            }
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 }

@@ -12,6 +12,11 @@ import com.salesianostriana.dam.ProyectoRecuperacion.users.models.UserRole;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.services.UsuarioService;
 import com.salesianostriana.dam.ProyectoRecuperacion.util.paginations.PaginationsLinksUtils;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -51,6 +56,7 @@ public class InmobiliariaController {
                     .body(inmobiliariaDtoConverter.convertInmobiliariaToGetInmobiliariaDto(inmobiliaria));
     }
 
+
     @GetMapping("/")
     public ResponseEntity<Page<GetInmobiliariaDto>> findAll (@PageableDefault(size=10, page=0) Pageable pageable, HttpServletRequest request) {
         Page<Inmobiliaria> inmobiliarias = inmobiliariaService.findAll(pageable);
@@ -71,7 +77,6 @@ public class InmobiliariaController {
 
     }
 
-    @GetMapping("/{id}")
     public ResponseEntity<GetInmobiliariaDto> findById (@PathVariable UUID id) {
         Optional<Inmobiliaria> inmobiliaria = inmobiliariaService.findById(id);
 

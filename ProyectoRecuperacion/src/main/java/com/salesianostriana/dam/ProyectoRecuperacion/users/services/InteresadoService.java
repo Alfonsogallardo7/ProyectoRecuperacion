@@ -26,4 +26,6 @@ public class InteresadoService extends BaseService<Interesa, InteresaPK, Interes
                 .build();
         return save(interesa);
     }
+
+
 }

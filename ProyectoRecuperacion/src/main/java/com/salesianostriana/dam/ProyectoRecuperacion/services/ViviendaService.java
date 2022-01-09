@@ -8,6 +8,8 @@ import com.salesianostriana.dam.ProyectoRecuperacion.services.base.BaseService;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -45,4 +47,5 @@ public class ViviendaService extends BaseService<Vivienda, UUID, ViviendaReposit
         vivienda.removeToInmobiliaria(inmobiliaria);
         return edit(vivienda);
     }
+
 }
