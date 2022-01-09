@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @SuperBuilder
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
-public class GetInteresaDto {
+public class GetInteresadoDto {
 
     private InteresaPK id;
     private String vivienda;

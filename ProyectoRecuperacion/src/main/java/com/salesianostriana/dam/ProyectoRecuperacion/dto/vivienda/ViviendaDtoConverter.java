@@ -1,10 +1,17 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.dto.vivienda;
 
 import com.salesianostriana.dam.ProyectoRecuperacion.models.Vivienda;
+import com.salesianostriana.dam.ProyectoRecuperacion.users.dto.UsuarioDtoConverter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.util.stream.Collectors;
+
+@RequiredArgsConstructor
 @Component
 public class ViviendaDtoConverter {
+
+    private final ViviendaInteresadoDtoConverter viviendaInteresadoDtoConverter;
 
     public GetViviendaDto convertViviendaToViviendaDto (Vivienda vivienda) {
         return GetViviendaDto.builder()

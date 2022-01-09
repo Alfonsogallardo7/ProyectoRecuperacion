@@ -6,8 +6,8 @@ import org.springframework.stereotype.Component;
 @Component
 public class InteresaDtoConverter {
 
-    public GetInteresaDto convertInteresaToInteresaDto(Interesa interesa) {
-        return GetInteresaDto.builder()
+    public GetInteresadoDto convertInteresaToInteresaDto(Interesa interesa) {
+        return GetInteresadoDto.builder()
                 .vivienda(interesa.getVivienda().getTitulo())
                 .interesado(interesa.getUsuario().getNombre())
                 .createDate(interesa.getCreatedDate())

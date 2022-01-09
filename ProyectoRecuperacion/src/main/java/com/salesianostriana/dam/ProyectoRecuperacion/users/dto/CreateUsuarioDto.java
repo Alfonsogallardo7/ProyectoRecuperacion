@@ -1,8 +1,9 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.users.dto;
 
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
-@Builder
+@SuperBuilder
 @NoArgsConstructor @AllArgsConstructor
 @Getter @Setter
 public class CreateUsuarioDto {

@@ -1,5 +1,9 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.users.services;
 
+import com.salesianostriana.dam.ProyectoRecuperacion.dto.interesa.CreateInteresDto;
+import com.salesianostriana.dam.ProyectoRecuperacion.dto.interesa.CreateInteresaInmprescindibleDto;
+import com.salesianostriana.dam.ProyectoRecuperacion.models.Interesa;
+import com.salesianostriana.dam.ProyectoRecuperacion.models.Vivienda;
 import com.salesianostriana.dam.ProyectoRecuperacion.services.base.BaseService;
 import com.salesianostriana.dam.ProyectoRecuperacion.services.InmobiliariaService;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.dto.CreateUsuarioDto;
@@ -7,13 +11,16 @@ import com.salesianostriana.dam.ProyectoRecuperacion.users.models.UserRole;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.repository.UsuarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -38,6 +45,15 @@ public class UsuarioService extends BaseService<Usuario, UUID, UsuarioRepository
             return repositorio.findAllByRole(UserRole.PROPIETARIO).get();
         }
     }
+
+    /*public List<Usuario> findAllInteresados() {
+        Optional<List<Usuario>> interesados = repositorio.findAllInteresados();
+        if (interesados.isEmpty())
+            return null;
+        else
+            return interesados.get();
+    }*/
+
 
     public Usuario findByIdPropietarios(UUID id) {
         Optional<Usuario> usuario = findById(id);
@@ -104,6 +120,16 @@ public class UsuarioService extends BaseService<Usuario, UUID, UsuarioRepository
         return null;
     }
 
+    public Usuario findGestorById(UUID id) {
+        Optional<Usuario> usuario = findById(id);
+
+        if (usuario.isEmpty())
+            return null;
+        else if (usuario.get().getRole().equals(UserRole.GESTOR)){
+            return usuario.get();
+        }
+        return null;
+    }
 
 
 

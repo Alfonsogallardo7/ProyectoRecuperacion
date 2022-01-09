@@ -1,5 +1,9 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.controllers;
 
+import com.salesianostriana.dam.ProyectoRecuperacion.dto.interesa.CreateInteresDto;
+import com.salesianostriana.dam.ProyectoRecuperacion.dto.interesa.CreateInteresaInmprescindibleDto;
+import com.salesianostriana.dam.ProyectoRecuperacion.dto.interesa.GetInteresadoDto;
+import com.salesianostriana.dam.ProyectoRecuperacion.dto.interesa.InteresaDtoConverter;
 import com.salesianostriana.dam.ProyectoRecuperacion.dto.vivienda.*;
 import com.salesianostriana.dam.ProyectoRecuperacion.models.Inmobiliaria;
 import com.salesianostriana.dam.ProyectoRecuperacion.models.Vivienda;
@@ -7,19 +11,18 @@ import com.salesianostriana.dam.ProyectoRecuperacion.services.InmobiliariaServic
 import com.salesianostriana.dam.ProyectoRecuperacion.services.ViviendaService;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.UserRole;
 import com.salesianostriana.dam.ProyectoRecuperacion.users.models.Usuario;
+import com.salesianostriana.dam.ProyectoRecuperacion.users.services.InteresadoService;
 import com.salesianostriana.dam.ProyectoRecuperacion.util.paginations.PaginationsLinksUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.UUID;
@@ -34,7 +37,9 @@ public class ViviendaController {
     private final InmobiliariaService inmobiliariaService;
     private final ViviendaDtoConverter viviendaDtoConverter;
     private final ViviendaImprescindibleDtoConverter viviendaImprescindibleDtoConverter;
+    private final InteresadoService interesadoService;
     private final ViviendaConPropietarioDtoConverter viviendaConPropietarioDtoConverter;
+    private final InteresaDtoConverter interesaDtoConverter;
     private final PaginationsLinksUtils paginationsLinksUtils;
 
         @GetMapping("/")
@@ -156,5 +161,19 @@ public class ViviendaController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(viviendaDtoConverter.convertViviendaToViviendaDto(vivienda1));
             }
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+
+        @PostMapping("/{id}/meinteresa")
+        public ResponseEntity<GetInteresadoDto> addInteresado (@PathVariable UUID id, @RequestBody CreateInteresaInmprescindibleDto mensaje, @AuthenticationPrincipal Usuario user
+                                                                    , CreateInteresDto createInteresDto) {
+           Optional<Vivienda> vivienda = viviendaService.findById(id);
+
+           if (vivienda.isEmpty())
+               return ResponseEntity.notFound().build();
+           else
+               return ResponseEntity.status(HttpStatus.CREATED).body(
+                       interesaDtoConverter.convertInteresaToInteresaDto(interesadoService.saveInteresado(createInteresDto,mensaje,user,vivienda.get()))
+               );
+
         }
 }

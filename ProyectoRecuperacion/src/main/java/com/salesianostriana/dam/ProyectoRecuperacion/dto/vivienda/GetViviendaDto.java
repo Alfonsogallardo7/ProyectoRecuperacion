@@ -1,10 +1,12 @@
 package com.salesianostriana.dam.ProyectoRecuperacion.dto.vivienda;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.salesianostriana.dam.ProyectoRecuperacion.dto.interesa.GetInteresadoDto;
+import com.salesianostriana.dam.ProyectoRecuperacion.users.dto.GetUsuarioDto;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter @Setter
 @NoArgsConstructor @AllArgsConstructor
@@ -16,5 +18,8 @@ public class GetViviendaDto {
     private int numHabitacion, numBanios;
     private boolean piscina, garaje, ascensor;
     private String nombrePropietario, emailPropietario, telefonoPropietario, inmobiliaria;
+
+    @Builder.Default
+    private List<GetInteresadoDto> interesado = new ArrayList<>();
 
 }
