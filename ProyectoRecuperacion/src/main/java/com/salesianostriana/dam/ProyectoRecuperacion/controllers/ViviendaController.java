@@ -18,6 +18,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,6 +37,7 @@ import java.util.UUID;
 @RequestMapping("/vivienda")
 @RequiredArgsConstructor
 @CrossOrigin
+@Tag(name = "vivienda", description = "El controlador de vivienda")
 public class ViviendaController {
 
     private final ViviendaService viviendaService;
@@ -46,6 +48,16 @@ public class ViviendaController {
     private final InteresaDtoConverter interesaDtoConverter;
     private final PaginationsLinksUtils paginationsLinksUtils;
 
+        @Operation(summary = "Listar todas las viviendas existentes")
+        @ApiResponses(value = {
+                @ApiResponse (responseCode = "200",
+                        description = "Se han listado todas las viviendas correctamente",
+                        content = {@Content(mediaType = "application/json",
+                                schema = @Schema (implementation = Vivienda.class))}),
+                @ApiResponse (responseCode = "404",
+                        description = "No se ha podido encontrar ninguna vivienda",
+                        content = @Content)
+        })
         @GetMapping("/")
         public ResponseEntity<Page<GetViviendaImprescindibles>> findAll(@PageableDefault(size=10, page=0) Pageable pageable, HttpServletRequest request) {
             Page<Vivienda> data = viviendaService.findAll(pageable);
@@ -64,6 +76,16 @@ public class ViviendaController {
             }
         }
 
+        @Operation(summary = "Listar todos los detalles de una vivienda por su id")
+        @ApiResponses(value = {
+                @ApiResponse (responseCode = "200",
+                        description = "Se han listado todos los detalles de la vivienda correctamente",
+                        content = {@Content(mediaType = "application/json",
+                                schema = @Schema (implementation = Vivienda.class))}),
+                @ApiResponse (responseCode = "404",
+                        description = "No se ha podido encontrar ninguna inmobiliaria",
+                        content = @Content)
+        })
         @GetMapping("/{id}")
         public ResponseEntity<GetViviendaDto> findById (@PathVariable UUID id) {
             Optional<Vivienda> viviendaBuscada = viviendaService.findById(id);
@@ -76,6 +98,19 @@ public class ViviendaController {
 
         }
 
+        @Operation(summary = "Borrar una vivienda por su id")
+        @ApiResponses(value = {
+                @ApiResponse (responseCode = "204",
+                        description = "Se ha borrado la vivienda correctamente",
+                        content = {@Content(mediaType = "application/json",
+                                schema = @Schema (implementation = Vivienda.class))}),
+                @ApiResponse (responseCode = "404",
+                        description = "No se ha podido encontrar ninguna vivienda",
+                        content = @Content),
+                @ApiResponse (responseCode = "403",
+                        description = "Acceso denegado",
+                        content = @Content)
+        })
         @DeleteMapping("/{id}")
         public ResponseEntity<?> delete (@PathVariable UUID id, @AuthenticationPrincipal Usuario user) {
             Optional<Vivienda> viviendaBuscada = viviendaService.findById(id);
@@ -89,7 +124,19 @@ public class ViviendaController {
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
 
-
+        @Operation(summary = "Agregar una nueva vivienda")
+        @ApiResponses(value = {
+                @ApiResponse (responseCode = "201",
+                        description = "La vivienda se ha creado correctamente",
+                        content = {@Content(mediaType = "application/json",
+                                schema = @Schema (implementation = Vivienda.class))}),
+                @ApiResponse (responseCode = "400",
+                        description = "No se ha podido crear la vivienda correctamente, error sintaxtico",
+                        content = @Content),
+                @ApiResponse (responseCode = "403",
+                        description = "Acceso denegado",
+                        content = @Content)
+        })
         @PostMapping("/")
         public ResponseEntity<GetViviendaDto> add (@RequestBody CreateViviendaDto viviendaNueva, @AuthenticationPrincipal Usuario usuario) {
             Vivienda vivienda = viviendaService.saveViviendaConPropietario(viviendaNueva,usuario);
@@ -100,6 +147,22 @@ public class ViviendaController {
                 return ResponseEntity.status(HttpStatus.CREATED).body(viviendaDtoConverter.convertViviendaToViviendaDto(vivienda));
         }
 
+        @Operation(summary = "Se edita una vivienda existente")
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "201",
+                description = "Se ha editado la vivienda correctamente",
+                content = {@Content(mediaType = "application/json",
+                schema = @Schema(implementation = Vivienda.class))}),
+                @ApiResponse(responseCode = "404",
+                description = "No se ha encontrado la vivienda",
+                content = @Content),
+                @ApiResponse(responseCode = "400",
+                description = "Los datos que se han introducido son erroneos",
+                content = @Content),
+                @ApiResponse(responseCode = "403",
+                description = "Acceso denegado",
+                content = @Content)
+        })
         @PutMapping("/{id}")
         public ResponseEntity<GetViviendaDto> edit (@PathVariable UUID id, @AuthenticationPrincipal Usuario user, @RequestBody CreateViviendaDto vivienda) {
             Optional<Vivienda> viviendaBuscada = viviendaService.findById(id);
@@ -169,6 +232,22 @@ public class ViviendaController {
         }
 
 
+        @Operation(summary = "Añiadir un interesado a una vivienda")
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "201",
+                        description = "Se ha creado el interes de la vivienda correctamente",
+                        content = {@Content(mediaType = "application/json",
+                                schema = @Schema(implementation = Vivienda.class))}),
+                @ApiResponse(responseCode = "404",
+                        description = "No se ha encontrado la vivienda",
+                        content = @Content),
+                @ApiResponse(responseCode = "400",
+                        description = "Los datos que se han introducido son erroneos",
+                        content = @Content),
+                @ApiResponse (responseCode = "403",
+                        description = "Acceso denegado",
+                        content = @Content)
+        })
         @PostMapping("/{id}/meinteresa")
         public ResponseEntity<GetInteresadoDto> addInteresado (@PathVariable UUID id, @RequestBody CreateInteresaInmprescindibleDto mensaje, @AuthenticationPrincipal Usuario user
                                                                     , CreateInteresDto createInteresDto) {
@@ -183,6 +262,19 @@ public class ViviendaController {
 
         }
 
+        @Operation(summary = "Borrar una interesado de una vivienda por el id de la vivienda")
+        @ApiResponses(value = {
+                @ApiResponse (responseCode = "204",
+                        description = "Se ha borrado el interesado de la vivienda correctamente",
+                        content = {@Content(mediaType = "application/json",
+                                schema = @Schema (implementation = Vivienda.class))}),
+                @ApiResponse (responseCode = "404",
+                        description = "No se ha podido encontrar ninguna vivienda",
+                        content = @Content),
+                @ApiResponse (responseCode = "403",
+                        description = "Acceso denegado",
+                        content = @Content)
+        })
         @DeleteMapping("/{id}/meinteresa")
         public ResponseEntity<?> deleteInteresado (@PathVariable UUID id, @AuthenticationPrincipal Usuario user) {
             Optional<Vivienda> vivienda = viviendaService.findById(id);
