@@ -71,48 +71,4 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
         }
         return null;
     }
-
-    /*
-    private final UsuarioService service;
-    private final JwtProvider provider;
-
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
-
-        String token = getJwtFromRequest(request);
-
-        try {
-            if (StringUtils.hasText(token)&&provider.validateToken(token)) {
-                UUID idUsuario = provider.getUserIdFromJwt(token);
-
-                Optional<Usuario> usuarioOptional = service.findById(idUsuario);
-                if (usuarioOptional.isPresent()){
-                    Usuario usuario = usuarioOptional.get();
-                    UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(
-                            usuario,
-                            usuario.getRole(),
-                            usuario.getAuthorities()
-                    );
-
-                    authenticationToken.setDetails(new WebAuthenticationDetails(request));
-
-                    SecurityContextHolder.getContext().setAuthentication(authenticationToken);
-                }
-            }
-        }catch (Exception exception) {
-            log.info("No se ha podido establecer el contexto de seguridad (" +exception.getMessage() + ")");
-        }
-
-        filterChain.doFilter(request, response);
-
-    }
-
-    private String getJwtFromRequest(HttpServletRequest request) {
-        String bearerToken = request.getHeader(JwtProvider.TOKEN_HEADER);
-        if (StringUtils.hasText(bearerToken)&&bearerToken.startsWith(JwtProvider.TOKE_PREFIX)){
-            return bearerToken.substring(JwtProvider.TOKE_PREFIX.length());
-        }
-        return null;
-    }*/
 }
